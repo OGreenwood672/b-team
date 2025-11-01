@@ -5,7 +5,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { getLeaderboard, subscribe } from '@/utils/review-store';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function LeaderboardScreen() {
   const [data, setData] = useState(() => getLeaderboard());
@@ -22,22 +22,24 @@ export default function LeaderboardScreen() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#F6F3FF', dark: '#2B2433' }}
       headerImage={<IconSymbol size={220} color="#8A63FF" name="star" style={styles.headerImage} />}>
+      
       <ThemedView style={styles.container}>
         <ThemedText type="title">Leaderboard</ThemedText>
         <ThemedText type="subtitle">Top hive reviewers</ThemedText>
-        <FlatList
-          data={data}
-          keyExtractor={(i) => i.name}
-          contentContainerStyle={{ paddingVertical: 12 }}
-          ListEmptyComponent={<ThemedText>No reviews yet — be the first!</ThemedText>}
-          renderItem={({ item, index }) => (
-            <View style={[styles.row, { backgroundColor: cardBg }] }>
-              <ThemedText style={styles.rank}>{index + 1}.</ThemedText>
-              <ThemedText style={styles.name}>{item.name}</ThemedText>
-              <ThemedText style={styles.count}>{item.reviews} reviews</ThemedText>
-            </View>
-          )}
-        />
+        {data.length === 0 && (
+          <ThemedText>No reviews yet — be the first!</ThemedText>
+        )}
+
+        {data.map((item, index) => (
+          <View 
+            key={item.name}
+            style={[styles.row, { backgroundColor: cardBg }]}
+          >
+            <ThemedText style={styles.rank}>{index + 1}.</ThemedText>
+            <ThemedText style={styles.name}>{item.name}</ThemedText>
+            <ThemedText style={styles.count}>{item.reviews} reviews</ThemedText>
+          </View>
+        ))}
 
         {/* <CustomButton title="Reset Leaderboard" onPress={() => resetStore()} /> */}
       </ThemedView>
