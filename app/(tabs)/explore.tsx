@@ -3,9 +3,9 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { getLeaderboard, resetStore, subscribe } from '@/utils/review-store';
+import { getLeaderboard, subscribe } from '@/utils/review-store';
 import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 export default function LeaderboardScreen() {
   const [data, setData] = useState(() => getLeaderboard());
@@ -14,7 +14,6 @@ export default function LeaderboardScreen() {
   useEffect(() => {
     const unsub = subscribe(() => setData(getLeaderboard()));
     return () => {
-      // unsubscribe returns a boolean; wrap so cleanup returns void
       unsub();
     };
   }, []);
@@ -40,7 +39,7 @@ export default function LeaderboardScreen() {
           )}
         />
 
-        <Button title="Reset Leaderboard" onPress={() => resetStore()} />
+        {/* <CustomButton title="Reset Leaderboard" onPress={() => resetStore()} /> */}
       </ThemedView>
     </ParallaxScrollView>
   );

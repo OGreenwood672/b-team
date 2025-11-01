@@ -1,10 +1,11 @@
 import SwipeDeck from '@/components/swipe-deck';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { CustomButton } from '@/components/ui/custom-button';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { addReview } from '@/utils/review-store';
 import { useEffect, useState } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 const SAMPLE_HIVES = [
   {
@@ -50,7 +51,6 @@ export default function HomeScreen() {
       text: 'Unhealthy signs: discolored combs, few bees, visible pests or mold.',
     },
   ];
-  const [tutorialCount, setTutorialCount] = useState(0);
   const [feedback, setFeedback] = useState<{ text: string; correct: boolean } | null>(null);
 
   // Test timer
@@ -89,42 +89,51 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title" style={{ color: tint }}>
-        Hive Health Review
-      </ThemedText>
-      <ThemedText type="subtitle" style={{ color: textColor }}>
-        Swipe right = healthy, left = unhealthy
-      </ThemedText>
 
       {mode === 'enter' && (
-        <View style={[styles.centerCard, { backgroundColor: cardBg }]}> 
-          <ThemedText style={{ color: '#0B0B0B', fontSize: 20, fontWeight: '700' }}>Welcome</ThemedText>
-          <TextInput
-            placeholder="Enter your name"
-            placeholderTextColor={tint}
-            value={name}
-            onChangeText={setName}
-            style={[styles.input, { borderColor: tint, color: textColor }]}
-          />
-          <View style={styles.buttonRow}>
-            <Button color={tint} title="Continue" onPress={() => { if (name.trim().length) setMode('choose'); }} disabled={name.trim().length === 0} />
+        <View>
+          <ThemedText type="title" style={styles.title}>
+            Happy Hives?
+          </ThemedText>
+          <View style={styles.centerCard}> 
+            <TextInput
+              placeholder="Enter your name"
+              placeholderTextColor={tint}
+              value={name}
+              onChangeText={setName}
+              style={[styles.input, { borderColor: tint, color: textColor }]}
+            />
+            <Pressable
+              style={[
+              styles.enterButton,
+              { backgroundColor: name.trim() ? '#FFD400' : '#cccccc' }
+              ]}
+              onPress={() => setMode('choose')}
+              disabled={!name.trim()}
+            >
+              <Text style={[
+                styles.enterButtonText, 
+                { color: !name.trim() ? '#000' : '#666' }
+              ]}>
+              Continue
+              </Text>
+            </Pressable>
           </View>
         </View>
       )}
 
       {mode === 'choose' && (
         <View>
-          <ThemedText>Welcome, {name}.</ThemedText>
-          <Button title="Gamemode 1: Tutorial" onPress={() => { setTutorialCount(TUTORIAL_SLIDES.length); setMode('tutorial'); }} />
-          <Button title="Gamemode 2: Test (30s)" onPress={() => { setMode('test'); setTimeLeft(TEST_DURATION); setTestRunning(true); }} />
-          <Button title="Change Name" onPress={() => { setMode('enter'); setName(''); }} />
+          <ThemedText style={styles.welcome}>Welcome, {name}!</ThemedText>
+          <ThemedText style={styles.welcomeSub}>Choose your challenge</ThemedText>
+          <CustomButton title="Tutorial" onPress={() => { setMode('tutorial'); }} />
+          <CustomButton title="Test (30s)" onPress={() => { setMode('test'); setTimeLeft(TEST_DURATION); setTestRunning(true); }} />
+          <CustomButton title="Back" onPress={() => { setMode('enter'); setName(''); }} />
         </View>
       )}
 
       {mode === 'tutorial' && (
-        <View>
-      <ThemedText>Tutorial: swipe to indicate whether the hive is healthy or unhealthy. We will tell you after each swipe.</ThemedText>
-
+        <View style={{marginTop: 30}}>
           <SwipeDeck
             items={TUTORIAL_SLIDES}
             onSwipe={(item, direction) => {
@@ -133,42 +142,49 @@ export default function HomeScreen() {
               const correct = expected === picked;
               setFeedback({ text: correct ? 'Correct!' : `Incorrect — correct: ${expected}`, correct });
               setTimeout(() => setFeedback(null), 1400);
-              setTutorialCount((c) => {
-                const next = c - 1;
-                if (next <= 0) {
-                  setTimeout(() => setMode('choose'), 1600);
-                }
-                return next;
-              });
+
             }}
           />
 
           {feedback ? (
             <ThemedText style={{ color: feedback.correct ? tint : '#ff4d4d', textAlign: 'center', marginTop: 8 }}>{feedback.text}</ThemedText>
-          ) : (
-            <ThemedText style={{ textAlign: 'center', marginTop: 8 }}>{tutorialCount} slides remaining</ThemedText>
-          )}
+          ) : <ThemedText style={{ textAlign: 'center', marginTop: 4, marginBottom: 10 }}>Swipe right for healthy and left for unhealthy</ThemedText>}
 
           <View style={{ marginTop: 8 }}>
-            <Button title="Back to Modes" onPress={() => setMode('choose')} />
+            <CustomButton title="Buzzin back" onPress={() => setMode('choose')} />
           </View>
         </View>
       )}
 
       {mode === 'test' && (
-        <View>
-          <ThemedText>Time left: {timeLeft}s</ThemedText>
-          <SwipeDeck items={SAMPLE_HIVES} onSwipe={handleSwipe} />
-          <Button title="End Test" onPress={() => { setTestRunning(false); setMode('summary'); }} />
+        <View style={{ flex: 1, position: 'relative' }}>
+          <View style={{ marginBottom: 12, marginTop: 20, paddingHorizontal: 15 }}>
+            <View style={{ height: 16, backgroundColor: '#111', borderRadius: 8, overflow: 'hidden' }}>
+              <View
+              style={{
+                height: '100%',
+                width: `${(timeLeft / TEST_DURATION) * 100}%`,
+                backgroundColor: '#FFD400',
+              }}
+              />
+            </View>
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <SwipeDeck items={SAMPLE_HIVES} onSwipe={handleSwipe} />
+          </View>
+
+          <View style={{ position: 'absolute', left: 15, right: 15, bottom: 30 }}>
+            <CustomButton title="Buzz Off" onPress={() => { setTestRunning(false); setMode('summary'); }} />
+          </View>
         </View>
       )}
 
       {mode === 'summary' && (
-        <View>
-          <ThemedText type="title">Test complete</ThemedText>
-          <ThemedText>Healthy: {healthyCount}</ThemedText>
-          <ThemedText>Unhealthy: {unhealthyCount}</ThemedText>
-          <Button title="Back to Modes" onPress={() => { setMode('choose'); setHealthyCount(0); setUnhealthyCount(0); }} />
+        <View style={[styles.center]}>
+          <ThemedText type="title" style={{marginTop: 100, marginBottom: 40}}>Test complete</ThemedText>
+          <ThemedText>Score: {healthyCount}</ThemedText>
+          <CustomButton title="Buzzing Back" onPress={() => { setMode('choose'); setHealthyCount(0); setUnhealthyCount(0); }} />
         </View>
       )}
 
@@ -178,34 +194,38 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: 15,
     gap: 8,
+    backgroundColor: '#FFF',
+    height: '100%',
+  },
+  title: {
+    textAlign: 'center',
+    marginTop: 85,
+    color: '#000',
   },
   summary: {
     marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  enterBackground: {
-    backgroundColor: '#000',
-    flex: 1,
-    paddingTop: 40,
-  },
   titleYellow: {
     color: '#FFD400',
+    width: '100%',
+    textAlign: 'center',
+    marginBottom: 12,
   },
   subtitleYellow: {
     color: '#FFD400',
   },
   centerCard: {
-    backgroundColor: '#111',
     padding: 20,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     width: '92%',
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 100,
   },
   input: {
     borderWidth: 1,
@@ -217,7 +237,40 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 12,
   },
-  buttonRow: {
-    width: '100%',
+  enterButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  enterButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  welcome: {
+    marginTop: 30, 
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: "#000",
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  welcomeSub: {
+    fontSize: 18,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tutorialText: {
+    fontSize: 16,
+    color: '#000',
+    textAlign: 'center',
+    marginTop: 25,
+    marginBottom: 30,
   },
 });
