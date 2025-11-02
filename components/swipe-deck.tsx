@@ -62,7 +62,7 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
           Animated.timing(pan, {
             toValue: { x: (toRight ? SCREEN_WIDTH : -SCREEN_WIDTH) * 1.4, y: gesture.dy },
             duration: 250,
-            useNativeDriver: true, // <-- 2. CHANGE THIS
+            useNativeDriver: true,
           }).start(() => handleSwipeComplete(toRight ? 'right' : 'left'));
         } else {
           Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start(); // <-- 3. CHANGE THIS
