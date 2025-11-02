@@ -1,62 +1,55 @@
+import { useAppFont } from '@/components/font-provider';
 import SwipeDeck from '@/components/swipe-deck';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { CustomButton } from '@/components/ui/custom-button';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { addReview } from '@/utils/review-store';
+import { recordSession } from '@/utils/review-store';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 const SAMPLE_HIVES = [
   {
     id: '1',
-    uri: 'https://images.unsplash.com/photo-1549625907-5f7ae0f2f6a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9d2c9f1dc3a1f8a5f9f9b8b1f8f9a3c4',
-    caption: 'Hive A',
+    uri: 'https://www.shutterstock.com/image-vector/queen-bee-clipart-design-anthophila-600w-2505300193.jpg',
+    caption: 'Has bees',
+    isHealthy: true,
   },
   {
     id: '2',
     uri: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5c8d9c6d8c6d6c6d8c6d6c6d6c6d6c6',
-    caption: 'Hive B',
+    caption: 'Has bees',
+    isHealthy: true,
   },
   {
     id: '3',
-    uri: 'https://images.unsplash.com/photo-1507914376894-ec5a9d19c4f4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6',
-    caption: 'Hive C',
+    uri: 'https://media.gettyimages.com/id/1415863030/photo/close-up-of-bee-pollinating-on-yellow-flower-flitwick-bedford-united-kingdom-uk.jpg?s=612x612&w=gi&k=20&c=Ld3L8AH3B_3zotblosLfmtzK5Qpn1SUDosFd6w9WoUU=',
+    caption: 'Has bees',
+    isHealthy: true,
   },
   {
     id: '4',
     uri: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6',
-    caption: 'Hive D',
+    caption: 'Has bees',
+    isHealthy: true,
   },
 ];
 
 export default function HomeScreen() {
-  const [healthyCount, setHealthyCount] = useState(0);
-  const [unhealthyCount, setUnhealthyCount] = useState(0);
+  const [reviewedCount, setReviewedCount] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
   const [name, setName] = useState('');
   const [mode, setMode] = useState<'enter' | 'choose' | 'tutorial' | 'test' | 'summary'>('enter');
 
-  // Tutorial slides (simple examples) — each has an expected correct label
-  const TUTORIAL_SLIDES = [
-    {
-      id: 't1',
-      uri: SAMPLE_HIVES[0].uri,
-      expected: 'healthy' as const,
-      text: 'Healthy hive: bees are active, combs look clean and consistent.',
-    },
-    {
-      id: 't2',
-      uri: SAMPLE_HIVES[1].uri,
-      expected: 'unhealthy' as const,
-      text: 'Unhealthy signs: discolored combs, few bees, visible pests or mold.',
-    },
-  ];
   const [feedback, setFeedback] = useState<{ text: string; correct: boolean } | null>(null);
 
   // Test timer
-  const TEST_DURATION = 30; // seconds
+  const TEST_DURATION = 30;
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [testRunning, setTestRunning] = useState(false);
+
+  const { fonts } = useAppFont();
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -64,8 +57,7 @@ export default function HomeScreen() {
       timer = setInterval(() => {
         setTimeLeft((t) => {
           if (t <= 1) {
-            setTestRunning(false);
-            setMode('summary');
+            finishTest();
             return 0;
           }
           return t - 1;
@@ -77,10 +69,19 @@ export default function HomeScreen() {
     };
   }, [mode, testRunning]);
 
-  const handleSwipe = (item: { id: string }, direction: 'left' | 'right') => {
-    if (direction === 'right') setHealthyCount((c) => c + 1);
-    else setUnhealthyCount((c) => c + 1);
-    addReview(name || 'Anonymous', direction === 'right' ? 'healthy' : 'unhealthy');
+  const handleSwipe = (item: any, direction: 'left' | 'right') => {
+    const pickedHealthy = direction === 'right';
+    const ground = (item as any).isHealthy as boolean | undefined;
+    const correct = typeof ground === 'boolean' ? ground === pickedHealthy : false;
+
+  setReviewedCount((c) => c + 1);
+    if (correct) setCorrectCount((c) => c + 1);
+  };
+
+  const finishTest = () => {
+    setTestRunning(false);
+    recordSession(name || 'Anonymous', correctCount, reviewedCount);
+    setMode('summary');
   };
 
   const tint = useThemeColor({}, 'tint');
@@ -91,67 +92,128 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
 
       {mode === 'enter' && (
-        <View>
-          <ThemedText type="title" style={styles.title}>
-            Happy Hives?
-          </ThemedText>
-          <View style={styles.centerCard}> 
-            <TextInput
-              placeholder="Enter your name"
-              placeholderTextColor={tint}
-              value={name}
-              onChangeText={setName}
-              style={[styles.input, { borderColor: tint, color: textColor }]}
-            />
-            <Pressable
-              style={[
-              styles.enterButton,
-              { backgroundColor: name.trim() ? '#FFD400' : '#cccccc' }
-              ]}
-              onPress={() => setMode('choose')}
-              disabled={!name.trim()}
-            >
-              <Text style={[
-                styles.enterButtonText, 
-                { color: !name.trim() ? '#000' : '#666' }
-              ]}>
-              Continue
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+        <SafeAreaView style={styles.wrapper}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+          >
+            <Text style={[styles.title, { fontFamily: fonts.monoBold }]}>
+              One in ten dead bee hives - yaa
+            </Text>
+            <Text style={styles.beeEmoji}>🐝</Text>
+            <View style={[styles.card, { backgroundColor: cardBg }]}>
+              <ThemedText style={[styles.cardTitle, { fontFamily: fonts.mono }]}>
+                What’s your name, honey?
+              </ThemedText>
+              
+              <TextInput
+                placeholder="Enter your name"
+                placeholderTextColor={tint}
+                value={name}
+                onChangeText={setName}
+                style={[
+                  styles.input,
+                  { 
+                    borderColor: tint, 
+                    color: textColor, 
+                    fontFamily: fonts.mono 
+                  }
+                ]}
+              />
+              
+              <Pressable
+                style={[
+                  styles.buttonBase, // Use new base style
+                  { backgroundColor: name.trim() ? colors.primary : '#cccccc' }
+                ]}
+                onPress={() => setMode('choose')}
+                disabled={!name.trim()}
+              >
+                <Text style={[
+                  styles.textBase,
+                  { 
+                    color: name.trim() ? colors.text : '#666666', 
+                    fontFamily: fonts.monoBold
+                  }
+                ]}>
+                  Continue
+                </Text>
+              </Pressable>
+            </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
       )}
 
       {mode === 'choose' && (
-        <View>
+        <View style={{marginTop: 150}}>
           <ThemedText style={styles.welcome}>Welcome, {name}!</ThemedText>
           <ThemedText style={styles.welcomeSub}>Choose your challenge</ThemedText>
-          <CustomButton title="Tutorial" onPress={() => { setMode('tutorial'); }} />
+          <CustomButton title="Learn Mode" onPress={() => { setMode('tutorial'); }} />
           <CustomButton title="Test (30s)" onPress={() => { setMode('test'); setTimeLeft(TEST_DURATION); setTestRunning(true); }} />
           <CustomButton title="Back" onPress={() => { setMode('enter'); setName(''); }} />
         </View>
       )}
 
       {mode === 'tutorial' && (
-        <View style={{marginTop: 30}}>
+        <View style={{ marginTop: 30, flex: 1, position: 'relative' }}>
           <SwipeDeck
-            items={TUTORIAL_SLIDES}
+            items={SAMPLE_HIVES}
             onSwipe={(item, direction) => {
-              const picked = direction === 'right' ? 'healthy' : 'unhealthy';
-              const expected = (item as any).expected as 'healthy' | 'unhealthy';
-              const correct = expected === picked;
-              setFeedback({ text: correct ? 'Correct!' : `Incorrect — correct: ${expected}`, correct });
-              setTimeout(() => setFeedback(null), 1400);
+              const pickedHealthy = direction === 'right';
+              const ground = (item as any).isHealthy as boolean | undefined;
+              const correct = typeof ground === 'boolean' ? ground === pickedHealthy : false;
 
+              let explanation = '';
+              if (typeof ground === 'boolean') {
+                if (correct) {
+                  explanation = pickedHealthy
+                    ? `Correct — ${item.caption}`
+                    : `Correct — ${item.caption}`;
+                } else {
+                  explanation = pickedHealthy
+                    ? `Incorrect — ${item.caption}`
+                    : `Incorrect — ${item.caption}`;
+                }
+              } else {
+                explanation = correct ? 'Correct' : 'Incorrect';
+              }
+
+              setFeedback({ text: explanation, correct });
             }}
           />
 
           {feedback ? (
-            <ThemedText style={{ color: feedback.correct ? tint : '#ff4d4d', textAlign: 'center', marginTop: 8 }}>{feedback.text}</ThemedText>
-          ) : <ThemedText style={{ textAlign: 'center', marginTop: 4, marginBottom: 10 }}>Swipe right for healthy and left for unhealthy</ThemedText>}
+            <View style={styles.overlayModal} pointerEvents="auto">
+              <View style={[styles.popupBox, { backgroundColor: feedback.correct ? '#e6ffea' : '#ffe6e6' }]}>
+                <ThemedText style={[styles.popupText, { color: feedback.correct ? '#0b7a3a' : '#a30000' }]}>{feedback.text}</ThemedText>
+                <View style={{ marginTop: 12 }}>
+                  <CustomButton title="Dismiss" onPress={() => setFeedback(null)} />
+                </View>
+              </View>
+            </View>
+          ) : (<View />)}
 
-          <View style={{ marginTop: 8 }}>
-            <CustomButton title="Buzzin back" onPress={() => setMode('choose')} />
+          <View style={{ position: 'absolute', left: 15, right: 15, bottom: 0 }}>
+            <View style={{ marginBottom: 110 }}>
+              <CustomButton title="Buzzin back" onPress={() => setMode('choose')} />
+            </View>
+            <View style={styles.arrowRow} pointerEvents="box-none">
+              <Pressable style={[styles.arrowButton, { marginRight: 12 }]} onPress={() => {}}>
+                <MaterialIcons name="arrow-back-ios" size={36} color={tint} />
+                <View>
+                  <ThemedText style={styles.arrowLabel}>Swipe</ThemedText>
+                  <ThemedText style={styles.arrowLabel}>Unhealthy</ThemedText>
+                </View>
+              </Pressable>
+
+              <Pressable style={[styles.arrowButton, { marginLeft: 12 }]} onPress={() => {}}>
+                <View>
+                  <ThemedText style={styles.arrowLabel}>Swipe</ThemedText>
+                  <ThemedText style={styles.arrowLabel}>Healthy</ThemedText>
+                </View>
+                <MaterialIcons name="arrow-forward-ios" size={36} color={tint} />
+              </Pressable>
+            </View>
           </View>
         </View>
       )}
@@ -174,8 +236,22 @@ export default function HomeScreen() {
             <SwipeDeck items={SAMPLE_HIVES} onSwipe={handleSwipe} />
           </View>
 
-          <View style={{ position: 'absolute', left: 15, right: 15, bottom: 30 }}>
-            <CustomButton title="Buzz Off" onPress={() => { setTestRunning(false); setMode('summary'); }} />
+          <View style={{ position: 'absolute', left: 5, right: 5, bottom: 0 }}>
+            
+            <View style={{bottom: 100}}>
+              <CustomButton title="Buzz Off" onPress={() => { finishTest(); }} />
+            </View>
+            <View style={styles.arrowRow} pointerEvents="box-none">
+              <Pressable style={[styles.arrowButton, { marginRight: 12 }]} onPress={() => {}}>
+                <MaterialIcons name="arrow-back-ios" size={30} color={tint} />
+                <ThemedText style={styles.arrowLabel}>Unhealthy</ThemedText>
+              </Pressable>
+
+              <Pressable style={[styles.arrowButton, { marginLeft: 12 }]} onPress={() => {}}>
+                <ThemedText style={styles.arrowLabel}>Healthy</ThemedText>
+                <MaterialIcons name="arrow-forward-ios" size={36} color={tint} />
+              </Pressable>
+            </View>
           </View>
         </View>
       )}
@@ -183,8 +259,8 @@ export default function HomeScreen() {
       {mode === 'summary' && (
         <View style={[styles.center]}>
           <ThemedText type="title" style={{marginTop: 100, marginBottom: 40}}>Test complete</ThemedText>
-          <ThemedText>Score: {healthyCount}</ThemedText>
-          <CustomButton title="Buzzing Back" onPress={() => { setMode('choose'); setHealthyCount(0); setUnhealthyCount(0); }} />
+          <ThemedText>Score: {correctCount} / {reviewedCount}</ThemedText>
+          <CustomButton title="Buzzing Back" onPress={() => { setMode('choose'); setReviewedCount(0); setCorrectCount(0); }} />
         </View>
       )}
 
@@ -192,18 +268,14 @@ export default function HomeScreen() {
   );
 }
 
+const colors = {
+  primary: '#FFD400',
+  text: '#333333',
+  background: '#FFFFFF',
+  secondary: '#FFF8DC',
+};
+
 const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-    gap: 8,
-    backgroundColor: '#FFF',
-    height: '100%',
-  },
-  title: {
-    textAlign: 'center',
-    marginTop: 85,
-    color: '#000',
-  },
   summary: {
     marginTop: 12,
     flexDirection: 'row',
@@ -218,6 +290,45 @@ const styles = StyleSheet.create({
   subtitleYellow: {
     color: '#FFD400',
   },
+    feedbackPopup: {
+      position: 'absolute',
+      left: 20,
+      right: 20,
+      top: 24,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
+      shadowRadius: 6,
+      elevation: 4,
+    },
+    overlayModal: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.35)',
+      zIndex: 9999,
+      elevation: 9999,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    popupBox: {
+      width: '86%',
+      padding: 18,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    popupText: {
+      fontSize: 16,
+      textAlign: 'center',
+    },
   centerCard: {
     padding: 20,
     borderRadius: 12,
@@ -226,16 +337,6 @@ const styles = StyleSheet.create({
     width: '92%',
     alignSelf: 'center',
     marginTop: 100,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#FFD400',
-    color: '#FFD400',
-    padding: 10,
-    borderRadius: 8,
-    width: '100%',
-    marginTop: 12,
-    marginBottom: 12,
   },
   enterButton: {
     paddingVertical: 10,
@@ -272,5 +373,92 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 25,
     marginBottom: 30,
+  },
+  arrowRow: {
+    position: 'absolute',
+    left: 2,
+    right: 2,
+    bottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    pointerEvents: 'box-none',
+  },
+  arrowButton: {
+    flex: 1,
+    flexDirection: 'row',
+    minWidth: 120,
+    marginHorizontal: 8,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: '#FFF8DC',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  arrowLabel: {
+    marginTop: 6,
+    fontSize: 14,
+    textAlign: 'center',
+    bottom: 2,
+  },
+  wrapper: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: colors.text,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  beeEmoji: {
+    fontSize: 48,
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  card: {
+    padding: 24,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  cardTitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  input: {
+    fontSize: 18,
+    padding: 12,
+    borderBottomWidth: 2,
+    borderColor: colors.primary,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  buttonBase: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  textBase: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

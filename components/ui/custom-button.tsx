@@ -1,3 +1,4 @@
+import { useAppFont } from '@/components/font-provider';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
 const colors = {
@@ -13,6 +14,8 @@ export const CustomButton = ({ title, onPress, variant = 'primary' }: {
     onPress: () => void;
     variant?: 'primary' | 'secondary';
 }) => {
+  const { fonts } = useAppFont();
+
   return (
     <Pressable
       style={({ pressed }) => [
@@ -24,6 +27,7 @@ export const CustomButton = ({ title, onPress, variant = 'primary' }: {
     >
       <Text style={[
         styles.textBase,
+        { fontFamily: fonts.mono },
         variant === 'primary' ? styles.textPrimary : styles.textSecondary
       ]}>
         {title}
@@ -48,7 +52,6 @@ const styles = StyleSheet.create({
   },
   textBase: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
   buttonPrimary: {
     backgroundColor: colors.primary,

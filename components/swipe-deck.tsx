@@ -1,14 +1,19 @@
-import { Image } from 'expo-image';
+import { Image as ExpoImage } from 'expo-image'; // <-- 1. IMPORT & RENAME
 import React, { useState } from 'react';
 import { Animated, Dimensions, PanResponder, StyleSheet, Text, View } from 'react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
+// --- 2. CREATE THE ANIMATED VERSION ---
+// This goes *outside* your component, at the top level of the file
+const AnimatedExpoImage = Animated.createAnimatedComponent(ExpoImage);
+
 type HiveItem = {
   id: string;
   uri: string;
   caption?: string;
+  isHealthy?: boolean;
 };
 
 type Props = {
@@ -33,15 +38,14 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
     if (!topItem) return;
     onSwipe?.(topItem, dir);
     setItems((prev) => prev.slice(1));
-    // reset position for next card
-    pan.setValue({ x: 0, y: 0 });
+    // We removed the pan.setValue reset from here
   };
 
   const panResponder = React.useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
-        useNativeDriver: false,
+        useNativeDriver: true, // <-- 1. CHANGE THIS
       }),
       onPanResponderRelease: (_, gesture) => {
         const movedX = gesture.dx;
@@ -51,14 +55,20 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
           Animated.timing(pan, {
             toValue: { x: (toRight ? SCREEN_WIDTH : -SCREEN_WIDTH) * 1.4, y: gesture.dy },
             duration: 250,
-            useNativeDriver: false,
+            useNativeDriver: true, // <-- 2. CHANGE THIS
           }).start(() => handleSwipeComplete(toRight ? 'right' : 'left'));
         } else {
-          Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
+          Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start(); // <-- 3. CHANGE THIS
         }
       },
     })
   ).current;
+  
+  // --- 3. ADD THE 'useEffect' FIX ---
+  // This resets the pan *after* the state updates, fixing the "flash"
+  React.useEffect(() => {
+    pan.setValue({ x: 0, y: 0 });
+  }, [topItem?.id, pan]); // Resets when the top item's ID changes
 
   const animatedStyle: any = {
     transform: [...pan.getTranslateTransform(), { rotate }],
@@ -72,31 +82,46 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
         </View>
       )}
 
-      {items
-        .slice(0, 3)
-        .reverse()
-        .map((item, index) => {
-          const isTop = index === 2 || (items.length === 1 && index === 0);
+      {(() => {
+        const rendered = items.slice(0, 3).reverse();
+        return rendered.map((item, index) => {
+          const isTop = index === rendered.length - 1;
           const cardStyle = isTop ? [styles.card, styles.topCard, animatedStyle] : [styles.card, { top: -index * 8, left: index * 6 }];
+          
           return (
             <Animated.View key={item.id} style={cardStyle as any}>
               {isTop ? (
                 <Animated.View {...panResponder.panHandlers} style={{ flex: 1 }}>
-                  <Animated.Image source={{ uri: item.uri } as any} style={styles.image as any} />
+                  
+                  {/* --- 4. USE THE NEW ANIMATED COMPONENT --- */}
+                  <AnimatedExpoImage
+                    source={{ uri: item.uri }}
+                    style={styles.image}
+                    contentFit="cover" // Use expo-image props
+                  />
+                  
                   {item.caption ? <Text style={styles.caption}>{item.caption}</Text> : null}
                 </Animated.View>
               ) : (
                 <View style={{ flex: 1 }}>
-                  <Image source={{ uri: item.uri }} style={styles.image} contentFit="cover" />
+                
+                  {/* --- 5. USE THE REGULAR 'ExpoImage' --- */}
+                  <ExpoImage 
+                    source={{ uri: item.uri }} 
+                    style={styles.image} 
+                    contentFit="cover" 
+                  />
                 </View>
               )}
             </Animated.View>
           );
-        })}
+        });
+      })()}
     </View>
   );
 }
 
+// --- (Styles are unchanged) ---
 const CARD_WIDTH = SCREEN_WIDTH - 48;
 const CARD_HEIGHT = Math.round(CARD_WIDTH * 1.3);
 
