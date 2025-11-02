@@ -102,7 +102,7 @@ export default function HomeScreen() {
             style={styles.container}
           >
             <Text style={[styles.title, { fontFamily: fonts.monoBold }]}>
-              One in ten dead bee hives - yaa
+              BUMBLE
             </Text>
             <Text style={styles.beeEmoji}>🐝</Text>
             <View style={[styles.card, { backgroundColor: cardBg }]}>
