@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-console.log('[review-store] module loaded');
-
 type ReviewRecord = {
   reviews: number;
   correct: number;
@@ -39,7 +37,6 @@ function notify() {
 }
 
 export function recordSession(reviewer: string, correctCount: number, reviewedCount: number) {
-  console.log(reviewer, correctCount, reviewedCount);
   if (correctCount == 0 || reviewedCount == 0) return;
   if (!reviewer) return;
   const r = store.get(reviewer) ?? { reviews: 0, correct: 0 };
@@ -51,7 +48,6 @@ export function recordSession(reviewer: string, correctCount: number, reviewedCo
   if (better) {
     r.correct = correctCount;
     r.reviews = reviewedCount;
-    console.log("Bettere");
   }
 
   store.set(reviewer, r);
