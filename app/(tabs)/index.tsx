@@ -6,37 +6,34 @@ import { CustomButton } from '@/components/ui/custom-button';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { recordSession } from '@/utils/review-store';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import hives from '../../assets/bees.json';
 
-const SAMPLE_HIVES = [
-  {
-    id: '1',
-    uri: 'https://www.shutterstock.com/image-vector/queen-bee-clipart-design-anthophila-600w-2505300193.jpg',
-    caption: 'Has bees',
-    isHealthy: true,
-  },
-  {
-    id: '2',
-    uri: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5c8d9c6d8c6d6c6d8c6d6c6d6c6d6c6',
-    caption: 'Has bees',
-    isHealthy: true,
-  },
-  {
-    id: '3',
-    uri: 'https://media.gettyimages.com/id/1415863030/photo/close-up-of-bee-pollinating-on-yellow-flower-flitwick-bedford-united-kingdom-uk.jpg?s=612x612&w=gi&k=20&c=Ld3L8AH3B_3zotblosLfmtzK5Qpn1SUDosFd6w9WoUU=',
-    caption: 'Has bees',
-    isHealthy: true,
-  },
-  {
-    id: '4',
-    uri: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6',
-    caption: 'Has bees',
-    isHealthy: true,
-  },
-];
+type BasicHive = {
+  id: number;
+  healthy: boolean;
+  description: string;
+};
+
+let SAMPLE_HIVES = hives.map((hive: BasicHive) => {
+  return {
+    uri: `https://raw.githubusercontent.com/OGreenwood672/b-team/refs/heads/main/assets/images/bees/${hive.id}.jpg`,
+    ...hive,
+  }
+});
+
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 
 export default function HomeScreen() {
+  console.error = () => {};
   const [reviewedCount, setReviewedCount] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [name, setName] = useState('');
@@ -44,10 +41,15 @@ export default function HomeScreen() {
 
   const [feedback, setFeedback] = useState<{ text: string; correct: boolean } | null>(null);
 
-  // Test timer
-  const TEST_DURATION = 30;
+  const TEST_DURATION = 10;
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [testRunning, setTestRunning] = useState(false);
+
+  const reviewedCountRef = useRef(reviewedCount);
+  const correctCountRef = useRef(correctCount);
+
+  reviewedCountRef.current = reviewedCount;
+  correctCountRef.current = correctCount;
 
   const { fonts } = useAppFont();
 
@@ -71,16 +73,18 @@ export default function HomeScreen() {
 
   const handleSwipe = (item: any, direction: 'left' | 'right') => {
     const pickedHealthy = direction === 'right';
-    const ground = (item as any).isHealthy as boolean | undefined;
-    const correct = typeof ground === 'boolean' ? ground === pickedHealthy : false;
+    const correct = item.healthy === pickedHealthy;
 
   setReviewedCount((c) => c + 1);
     if (correct) setCorrectCount((c) => c + 1);
   };
 
   const finishTest = () => {
+    const finalCorrect = correctCountRef.current;
+    const finalReviewed = reviewedCountRef.current;
+
     setTestRunning(false);
-    recordSession(name || 'Anonymous', correctCount, reviewedCount);
+    recordSession(name || 'Anonymous', finalCorrect, finalReviewed);
     setMode('summary');
   };
 
@@ -123,7 +127,7 @@ export default function HomeScreen() {
               
               <Pressable
                 style={[
-                  styles.buttonBase, // Use new base style
+                  styles.buttonBase,
                   { backgroundColor: name.trim() ? colors.primary : '#cccccc' }
                 ]}
                 onPress={() => setMode('choose')}
@@ -148,8 +152,8 @@ export default function HomeScreen() {
         <View style={{marginTop: 150}}>
           <ThemedText style={styles.welcome}>Welcome, {name}!</ThemedText>
           <ThemedText style={styles.welcomeSub}>Choose your challenge</ThemedText>
-          <CustomButton title="Learn Mode" onPress={() => { setMode('tutorial'); }} />
-          <CustomButton title="Test (30s)" onPress={() => { setMode('test'); setTimeLeft(TEST_DURATION); setTestRunning(true); }} />
+          <CustomButton title="Learn Mode" onPress={() => { SAMPLE_HIVES = shuffleArray(SAMPLE_HIVES); setMode('tutorial'); }} />
+          <CustomButton title={`Test (${TEST_DURATION}s)`} onPress={() => { SAMPLE_HIVES = shuffleArray(SAMPLE_HIVES); setMode('test'); setTimeLeft(TEST_DURATION); setTestRunning(true); }} />
           <CustomButton title="Back" onPress={() => { setMode('enter'); setName(''); }} />
         </View>
       )}
@@ -160,24 +164,18 @@ export default function HomeScreen() {
             items={SAMPLE_HIVES}
             onSwipe={(item, direction) => {
               const pickedHealthy = direction === 'right';
-              const ground = (item as any).isHealthy as boolean | undefined;
-              const correct = typeof ground === 'boolean' ? ground === pickedHealthy : false;
+              const correct = item.healthy === pickedHealthy;
 
               let explanation = '';
-              if (typeof ground === 'boolean') {
-                if (correct) {
-                  explanation = pickedHealthy
-                    ? `Correct — ${item.caption}`
-                    : `Correct — ${item.caption}`;
-                } else {
-                  explanation = pickedHealthy
-                    ? `Incorrect — ${item.caption}`
-                    : `Incorrect — ${item.caption}`;
-                }
+              if (correct) {
+                explanation = pickedHealthy
+                  ? `Correct — No signs of damage or disease`
+                  : `Correct — ${item.description}`;
               } else {
-                explanation = correct ? 'Correct' : 'Incorrect';
+                explanation = pickedHealthy
+                  ? `Incorrect — ${item.description}`
+                  : `Incorrect — No signs of damage or disease`;
               }
-
               setFeedback({ text: explanation, correct });
             }}
           />

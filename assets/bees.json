@@ -1,0 +1,1002 @@
+[
+	{
+		"id": 0,
+		"healthy": false,
+		"description": "This hive displays symptoms of chalkbrood disease, with chalky white substance in many brood cells."
+	},
+	{
+		"id": 1,
+		"healthy": false,
+		"description": "This hive displays symptoms of chalkbrood disease, with chalky white substance in many brood cells and very dry caps."
+	},
+	{
+		"id": 2,
+		"healthy": false,
+		"description": "This hive displays symptoms of chalkbrood disease, with chalky white substance in many brood cells."
+	},
+	{
+		"id": 3,
+		"healthy": false,
+		"description": "Dead adult bees indicate possible disease or poisoning in this hive."
+	},
+	{
+		"id": 4,
+		"healthy": false,
+		"description": "This bee has deformed wings, a symptom of Deformed Wing Virus often associated with Varroa mite infestations."
+	},
+	{
+		"id": 5,
+		"healthy": false,
+		"description": "This is a rare queen bee with deformed wings, likely due to a viral infection."
+	},
+	{
+		"id": 6,
+		"healthy": false,
+		"description": "This bee has deformed wings, a symptom of Deformed Wing Virus often associated with Varroa mite infestations."
+	},
+	{
+		"id": 7,
+		"healthy": false,
+		"description": "The gooey substance on top of the brood cells indicates a foulbrood infection in this hive."
+	},
+	{
+		"id": 8,
+		"healthy": false,
+		"description": "The gooey substance on top of the brood cells indicates a foulbrood infection in this hive."
+	},
+	{
+		"id": 9,
+		"healthy": false,
+		"description": "The gooey substance on top of the brood cells indicates a foulbrood infection in this hive alongside broken cell walls."
+	},
+	{
+		"id": 10,
+		"healthy": false,
+		"description": "This hive has significant mold growth on the comb, indicating poor hive conditions."
+	},
+	{
+		"id": 11,
+		"healthy": false,
+		"description": "This hive has mold growth underneath the adult bees, indicating poor hive conditions."
+	},
+	{
+		"id": 12,
+		"healthy": false,
+		"description": "This hive has mold growth on the comb, indicating poor hive conditions."
+	},
+	{
+		"id": 13,
+		"healthy": false,
+		"description": "The brood pattern is patchy and irregular, indicating potential queen issues or disease in this hive."
+	},
+	{
+		"id": 14,
+		"healthy": false,
+		"description": "The brood pattern is patchy and irregular, indicating potential queen issues or disease in this hive."
+	},
+	{
+		"id": 15,
+		"healthy": false,
+		"description": "The brood pattern is patchy and irregular and the caps are very dry."
+	},
+	{
+		"id": 16,
+		"healthy": false,
+		"description": "The brood cell caps are perforated and partially sunken."
+	},
+	{
+		"id": 17,
+		"healthy": false,
+		"description": "The brood cell caps are perforated and partially sunken."
+	},
+	{
+		"id": 18,
+		"healthy": false,
+		"description": "The brood cell caps are perforated and partially sunken."
+	},
+	{
+		"id": 19,
+		"healthy": false,
+		"description": "The brood cell caps are perforated and partially sunken."
+	},
+	{
+		"id": 20,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 21,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 22,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 23,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 24,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 25,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 26,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 27,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 28,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 29,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 30,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 31,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 32,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 33,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 34,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 35,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 36,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 37,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 38,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 39,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 40,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 41,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 42,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 43,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 44,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 45,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 46,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 47,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 48,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 49,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 50,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 51,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 52,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 53,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 54,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 55,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 56,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 57,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 58,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 59,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 60,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 61,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 62,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 63,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 64,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 65,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 66,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 67,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 68,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 69,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 70,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 71,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 72,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 73,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 74,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 75,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 76,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 77,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 78,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 79,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 20,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 21,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 22,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 23,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 24,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 25,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 26,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 27,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 28,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 29,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 30,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 31,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 32,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 33,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 34,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 35,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 36,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 37,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 38,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 39,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 40,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 41,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 42,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 43,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 44,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 45,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 46,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 47,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 48,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 49,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 50,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 51,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 52,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 53,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 54,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 55,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 56,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 57,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 58,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 59,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 60,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 61,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 62,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 63,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 64,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 65,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 66,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 67,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 68,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 69,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 70,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 71,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 72,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 73,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 74,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 75,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 76,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 77,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 78,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 79,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 20,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 21,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 22,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 23,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 24,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 25,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 26,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 27,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 28,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 29,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 30,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 31,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 32,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 33,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 34,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 35,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 36,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 37,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 38,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 39,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 40,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 41,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 42,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 43,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 44,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 45,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 46,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 47,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 48,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 49,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 50,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 51,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 52,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 53,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 54,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 55,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 56,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 57,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 58,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 59,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 60,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 61,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 62,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 63,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 64,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 65,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 66,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 67,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 68,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 69,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 70,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 71,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 72,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 73,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 74,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 75,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 76,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 77,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 78,
+		"healthy": true,
+		"description": ""
+	},
+	{
+		"id": 79,
+		"healthy": true,
+		"description": ""
+	}
+]

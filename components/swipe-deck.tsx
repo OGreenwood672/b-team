@@ -1,19 +1,17 @@
 import { Image as ExpoImage } from 'expo-image'; // <-- 1. IMPORT & RENAME
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Animated, Dimensions, PanResponder, StyleSheet, Text, View } from 'react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
-// --- 2. CREATE THE ANIMATED VERSION ---
-// This goes *outside* your component, at the top level of the file
 const AnimatedExpoImage = Animated.createAnimatedComponent(ExpoImage);
 
 type HiveItem = {
-  id: string;
+  id: number;
   uri: string;
-  caption?: string;
-  isHealthy?: boolean;
+  description: string;
+  healthy: boolean;
 };
 
 type Props = {
@@ -26,19 +24,29 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
 
   const topItem = items[0];
 
-  // Animated values for the top card
+  React.useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
   const pan = React.useRef(new Animated.ValueXY()).current;
+
   const rotate = pan.x.interpolate({
     inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
     outputRange: ['-25deg', '0deg', '25deg'],
     extrapolate: 'clamp',
   });
 
-  const handleSwipeComplete = (dir: 'left' | 'right') => {
-    if (!topItem) return;
-    onSwipe?.(topItem, dir);
-    setItems((prev) => prev.slice(1));
-  };
+
+  const handleSwipeComplete = useCallback((dir: 'left' | 'right') => {
+    setItems((prevItems) => {
+      const itemToSwipe = prevItems[0];
+      if (!itemToSwipe) {
+        return prevItems;
+      }
+      onSwipe?.(itemToSwipe, dir);
+
+      return prevItems.slice(1);
+    });
+  }, [onSwipe]);
 
   const panResponder = React.useRef(
     PanResponder.create({
@@ -54,20 +62,18 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
           Animated.timing(pan, {
             toValue: { x: (toRight ? SCREEN_WIDTH : -SCREEN_WIDTH) * 1.4, y: gesture.dy },
             duration: 250,
-            useNativeDriver: false,
+            useNativeDriver: true, // <-- 2. CHANGE THIS
           }).start(() => handleSwipeComplete(toRight ? 'right' : 'left'));
         } else {
-          Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
+          Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: true }).start(); // <-- 3. CHANGE THIS
         }
       },
     })
   ).current;
   
-  // --- 3. ADD THE 'useEffect' FIX ---
-  // This resets the pan *after* the state updates, fixing the "flash"
   React.useEffect(() => {
     pan.setValue({ x: 0, y: 0 });
-  }, [topItem?.id, pan]); // Resets when the top item's ID changes
+  }, [topItem?.id, pan]);
 
   const animatedStyle: any = {
     transform: [...pan.getTranslateTransform(), { rotate }],
@@ -88,23 +94,20 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
           const cardStyle = isTop ? [styles.card, styles.topCard, animatedStyle] : [styles.card, { top: -index * 8, left: index * 6 }];
           
           return (
-            <Animated.View key={item.id} style={cardStyle as any}>
+            <Animated.View key={item.id + index * 100} style={cardStyle as any}>
               {isTop ? (
                 <Animated.View {...panResponder.panHandlers} style={{ flex: 1 }}>
                   
-                  {/* --- 4. USE THE NEW ANIMATED COMPONENT --- */}
                   <AnimatedExpoImage
                     source={{ uri: item.uri }}
                     style={styles.image}
-                    contentFit="cover" // Use expo-image props
+                    contentFit="cover"
                   />
                   
-                  {item.caption ? <Text style={styles.caption}>{item.caption}</Text> : null}
                 </Animated.View>
               ) : (
                 <View style={{ flex: 1 }}>
                 
-                  {/* --- 5. USE THE REGULAR 'ExpoImage' --- */}
                   <ExpoImage 
                     source={{ uri: item.uri }} 
                     style={styles.image} 
@@ -120,7 +123,6 @@ export default function SwipeDeck({ items: initialItems, onSwipe }: Props) {
   );
 }
 
-// --- (Styles are unchanged) ---
 const CARD_WIDTH = SCREEN_WIDTH - 48;
 const CARD_HEIGHT = Math.round(CARD_WIDTH * 1.3);
 
